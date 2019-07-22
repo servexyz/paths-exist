@@ -1,11 +1,11 @@
 {
-  "name": "node-starter",
-  "version": "1.0.0",
+  "name": "paths-exist",
+  "version": "0.1.0",
   "main": "build/main.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/servexyz/node-starter"
+    "url": "https://github.com/servexyz/paths-exist"
   },
   "devDependencies": {
     "@ava/babel-preset-stage-4": "^3.0.0",
@@ -36,14 +36,9 @@
     "build": "webpack --mode production --display minimal",
     "clean": "npm run clean:build",
     "clean:build": "rm -Rf ./build",
-    "clean:docker": "docker rm -f $(docker ps -aqf 'name=node-starter')",
     "dev": "npm run dev:liveReloadedModule",
     "dev:vanillaModule": "babel-node src/index.js",
     "dev:liveReloadedModule": "nodemon --watch src/index.js --exec 'babel-node src/index.js'",
-    "dev:liveReloadedDocker": "npm-run-all -p docker:compose dev:liveReloadedModule docker:liveReload ",
-    "docker:liveReload": "npx docker-live-reload 'src/**/*' node-starter_server_1 /usr/src/server/src",
-    "docker:compose": "docker-compose up -d",
-    "dev:server": "webpack --mode development --watch --display minimal",
     "test": "npm-run-all -s clean:build build test:liveReloadedAva",
     "test:ava": "ava",
     "test:liveReloadedAva": "ava --watch",
