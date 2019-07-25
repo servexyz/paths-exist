@@ -21,14 +21,18 @@
     "nodemon-webpack-plugin": "^4.0.8",
     "npm-run-all": "^4.1.5",
     "size-plugin": "^1.2.0",
+    "snyk": "^1.197.0",
     "source-map-loader": "^0.2.4",
+    "tacker": "^0.2.7",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "webpack-node-externals": "^1.7.2",
     "webpackbar": "^3.2.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.5.5"
+    "@babel/runtime": "^7.5.5",
+    "chalk": "^2.4.2",
+    "fs-extra": "^8.1.0"
   },
   "scripts": {
     "start": "npm run dev",
@@ -42,10 +46,12 @@
     "test:ava": "ava",
     "test:liveReloadedAva": "ava --watch",
     "production": "npm run build && node build/main.js",
-    "ci": "npm run build && npm run ci:local:timed",
+    "ci": "npm-run-all -s build ci:local:timed:vuln",
+    "ci:snyk": "snyk test",
     "ci:remote": "npm-run-all -s clean:build build test:ava",
     "ci:local": "trevor",
     "ci:local:timed": "npm run ci:local | gnomon --type=elapsed-total",
+    "ci:local:timed:vuln": "npm-run-all -p ci:snyk ci:local | gnomon --type=elapsed-total",
     "ci:local:cache:install": "docker pull verdaccio/verdaccio",
     "ci:local:cache:run": "docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio",
     "ci:prepare": "npm install -g trevor gnomon"

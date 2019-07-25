@@ -1,90 +1,36 @@
-export function pathsExistAsync(arrPathsObj, szPreErrorMessage) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (Array.isArray(arrPathsObj)) {
-        arrPathsObj.map(async pathToCheck => {
-          await fs.access(pathToCheck);
-        });
-        resolve([true, ...arrPathsObj]);
-      } else {
-        await fs.access(arrPathsObj);
-        resolve([true, arrPathsObj]);
-      }
-    } catch (err) {
-      reject(`${chalk.red(szPreErrorMessage)}: \n ${chalk.grey(err)}`);
-    }
-  });
-}
-export async function pathsExistSync(
-  arrPathsObj,
-  szPreErrorMessage = "Path did not exist"
-) {
-  //TODO: Consider adding a return value (or prom) so it can be caught inline
-  //TODO: Consider adding option to include printLine & printMirrors for success cases
-  //TODO: Convert below into unit test (should pass)
-  // let rightPath = [
-  //   {
-  //     dir: "sandbox/npm-starter-sample-module/src",
-  //     name: "npm-starter-sample-module"
-  //   }
-  // ];
-  // pathsExistOrThrow(targets, "PTOWatcher failed to initialize properly <fs.access>");
-  //TODO: Convert below code into unit test (ie. should throw error)
-  // let wrongPathString = "foo"
-  // let wrongPathArray = [
-  //   {
-  //     foo: "bar"
-  //   }
-  // ];
-  // pathsExistOrThrow(wrongPathArray, "PTOWatcher failed to initialize properly <fs.access>");
-  // pathsExistOrThrow(wrongPathString, "PTOWatcher failed to initialize properly <fs.access>");
-
+import fs from "fs-extra";
+//TODO: Create promisified version of fs instead of importing fs-extra
+export async function pathsExist(arrPathsObj) {
+  if (typeof arrPathsObj === undefined)
+    throw new Error("arrPathsObj was undefined");
   if (Array.isArray(arrPathsObj)) {
-    let arrFilePaths = arrPathsObj.map(mTarget => {
-      if (typeof mTarget == "object") {
-        // * handle array of objects
-        // * (ie. default case; used for testing watcherConfig's "targets" array)
-
-        return Object.values(mTarget).map(pathToCheck => {
-          return pathToCheck;
-        });
-      } else {
-        // * handle array of strings
-        // * (ie. manually defined arrays with file paths)
-
-        return mTarget;
-      }
-    });
-    for (let pathToCheck of arrFilePaths) {
-      // ? Now iterate over the flattened map of paths (all should be strings)
-      try {
-        await fs.access(pathToCheck);
-      } catch (err) {
-        /*
-          TODO: Figure out why this is being thrown
-          ? Array of paths failed ----------------------------------------------------------- Path did not exist
-          ? TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be one of type string, Buffer, or URL. Received type object
-        */
-        log(
-          `${chalk.red("Array of paths failed")} ${printLine(
-            "red"
-          )} ${chalk.red(szPreErrorMessage)} \n ${chalk.grey(err)}`
-        );
-      }
+    let paths;
+    try {
+      paths = arrPathsObj.map(async pathToCheck => {
+        await fs.access(pathToCheck, fs.constants.F_OK);
+        return pathToCheck;
+      });
+    } catch (err) {
+      let errString = `${pathToCheck} was not accessible.\n${err}`;
+      throw new Error(errString);
     }
-  } else if (typeof arrPathsObj == "string") {
-    // ? handle checking path of single string
+    if (typeof paths !== undefined) {
+      let awaitedPaths = [];
+      for await (let p of paths) {
+        awaitedPaths.push(p);
+      }
+      return awaitedPaths;
+    } else {
+      console.warn("Paths were undefined. Returning un-awaited paths");
+      return paths;
+    }
+  } else {
     try {
       await fs.access(arrPathsObj);
+      return arrPathsObj;
     } catch (err) {
-      printLine("red");
-      //TODO: Add a getLine() utility so that I can include in the middle of a log without needing to log inside of a log (which doesn't process stdout in proper order)
-      log(
-        `${chalk.red("Single string failed")} \n${chalk.red(
-          szPreErrorMessage
-        )} \n ${chalk.grey(err)}`
-      );
-      printLine("red");
+      let errString = `${arrPathsObj} was not accessible.\n${err}`;
+      throw new Error(errString);
     }
   }
 }
