@@ -1,93 +1,45 @@
 const log = console.log;
 import fs from "fs-extra";
+import chalk from "chalk";
 import { printMirror } from "tacker";
+
 export async function pathsExist(arrPathsObj) {
   if (typeof arrPathsObj === undefined)
     throw new Error("arrPathsObj was undefined");
+  let paths;
   if (Array.isArray(arrPathsObj)) {
-    return arrPathsObj.map(async pathToCheck => {
-      log(`insideeee`);
-      try {
-        let res = await fs.access(pathToCheck, fs.constants.F_OK);
-        log(`insideeee 1A`);
-        printMirror({ res }, "magenta", "grey");
-        return res;
-      } catch (err) {
-        let errString = `${pathToCheck} in ${JSON.stringify(
-          arrPathsObj,
-          null,
-          2
-        )} was not accessible.\n${err}`;
-        // let errString = `${pathToCheck} was not accessible.\n${err}`;
+    // try {
+    paths = arrPathsObj.map(async pathToCheck => {
+      await fs.access(pathToCheck, fs.constants.F_OK).catch(err => {
+        let errString = `${pathToCheck} was not accessible.\n${err}`;
         throw new Error(errString);
-      }
+      });
+      printMirror({ pathToCheck }, "magenta", "grey");
+      return pathToCheck;
     });
+    // } catch (err) {
+    //   let errString = `${pathToCheck} was not accessible.\n${err}`;
+    //   throw new Error(errString);
+    // }
+    if (typeof paths !== undefined) {
+      let awaitedPaths = [];
+      for await (let p of paths) {
+        awaitedPaths.push(p);
+      }
+      return awaitedPaths;
+    } else {
+      console.warn(
+        `${chalk.red("Paths were undefined. Returning un-awaited paths")}`
+      );
+      return paths;
+    }
   } else {
     try {
-      log(`insideeee2`);
-      let res = await fs.access(arrPathsObj);
-
-      log(`insideeee2 2A`);
-      printMirror({ res }, "yellow", "grey");
-      return res;
+      await fs.access(arrPathsObj);
+      return arrPathsObj;
     } catch (err) {
       let errString = `${arrPathsObj} was not accessible.\n${err}`;
       throw new Error(errString);
     }
   }
 }
-
-// export async function pathsExistSync(
-//   arrPathsObj,
-//   szPreErrorMessage = "Path did not exist"
-// ) {
-
-//   if (Array.isArray(arrPathsObj)) {
-//     let arrFilePaths = arrPathsObj.map(mTarget => {
-//       if (typeof mTarget == "object") {
-//         // * handle array of objects
-//         // * (ie. default case; used for testing watcherConfig's "targets" array)
-
-//         return Object.values(mTarget).map(pathToCheck => {
-//           return pathToCheck;
-//         });
-//       } else {
-//         // * handle array of strings
-//         // * (ie. manually defined arrays with file paths)
-
-//         return mTarget;
-//       }
-//     });
-//     for (let pathToCheck of arrFilePaths) {
-//       // ? Now iterate over the flattened map of paths (all should be strings)
-//       try {
-//         await fs.access(pathToCheck);
-//       } catch (err) {
-//         /*
-//           TODO: Figure out why this is being thrown
-//           ? Array of paths failed ----------------------------------------------------------- Path did not exist
-//           ? TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be one of type string, Buffer, or URL. Received type object
-//         */
-//         log(
-//           `${chalk.red("Array of paths failed")} ${printLine(
-//             "red"
-//           )} ${chalk.red(szPreErrorMessage)} \n ${chalk.grey(err)}`
-//         );
-//       }
-//     }
-//   } else if (typeof arrPathsObj == "string") {
-//     // ? handle checking path of single string
-//     try {
-//       await fs.access(arrPathsObj);
-//     } catch (err) {
-//       printLine("red");
-//       //TODO: Add a getLine() utility so that I can include in the middle of a log without needing to log inside of a log (which doesn't process stdout in proper order)
-//       log(
-//         `${chalk.red("Single string failed")} \n${chalk.red(
-//           szPreErrorMessage
-//         )} \n ${chalk.grey(err)}`
-//       );
-//       printLine("red");
-//     }
-//   }
-// }

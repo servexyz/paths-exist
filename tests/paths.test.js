@@ -1,25 +1,40 @@
+const log = console.log;
 import test from "ava";
 import chalk from "chalk";
+import { printMirror } from "tacker";
 import { pathsExist } from "../src/index";
 
-test("pathsExist :: Throws because path does not exist", async t => {
+test("pathsExist :: package.json exists", async t => {
+  let path = "package.json";
+  let pkg = await pathsExist(path);
+  printMirror({ pkg }, "magenta", "grey");
+  t.pass();
+});
+test("pathsExist :: package.json and readme.md both exist", async t => {
+  let paths = ["package.json", "readme.md"];
+  let pkgReadme = await pathsExist(paths);
+  printMirror({ pkgReadme }, "magenta", "grey");
+  t.truthy(pkgReadme);
+});
+
+test("pathsExist :: Successfully throws because path does not exist", async t => {
   let path = "this/path/does/not/exist";
   await t.throwsAsync(async () => {
     await pathsExist(path);
   });
 });
-test("pathsExist :: Throws because multiple paths do not exist", async t => {
-  let paths = ["this/path/does/not/exist", "this/path/also/does/not/exist"];
+test("pathsExist :: Successfully throws because multiple paths do not exist", async t => {
+  let paths = ["this/path/does/not/exist", "other/path/also/does/not/exist"];
   await t.throwsAsync(async () => {
     await pathsExist(paths);
   });
 });
-test("pathsExist :: Throws because no parameter provided", async t => {
+test("pathsExist :: Successfully throws because no parameter provided", async t => {
   await t.throwsAsync(async () => {
     await pathsExist();
   });
 });
-test("throws", async t => {
+test.skip("throws", async t => {
   await t.throwsAsync(
     async () => {
       throw new TypeError("🦄");
@@ -27,23 +42,3 @@ test("throws", async t => {
     { instanceOf: TypeError, message: "🦄" }
   );
 });
-// test("pathsExist", t => {});
-//TODO: Consider adding a return value (or prom) so it can be caught inline
-//TODO: Consider adding option to include printLine & printMirrors for success cases
-//TODO: Convert below into unit test (should pass)
-// let rightPath = [
-//   {
-//     dir: "sandbox/npm-starter-sample-module/src",
-//     name: "npm-starter-sample-module"
-//   }
-// ];
-// pathsExistSync(targets, "PTOWatcher failed to initialize properly <fs.access>");
-//TODO: Convert below code into unit test (ie. should throw error)
-// let wrongPathString = "foo"
-// let wrongPathArray = [
-//   {
-//     foo: "bar"
-//   }
-// ];
-// pathsExistSync(wrongPathArray, "PTOWatcher failed to initialize properly <fs.access>");
-// pathsExistSync(wrongPathString, "PTOWatcher failed to initialize properly <fs.access>");
