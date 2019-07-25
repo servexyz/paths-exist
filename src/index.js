@@ -1,22 +1,36 @@
-import chalk from "chalk";
 import fs from "fs";
-export function pathsExist(arrPathsObj, szPreErrorMessage) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (Array.isArray(arrPathsObj)) {
-        arrPathsObj.map(async pathToCheck => {
-          await fs.access(pathToCheck);
-        });
-        resolve([true, ...arrPathsObj]);
-      } else {
-        await fs.access(arrPathsObj);
-        resolve([true, arrPathsObj]);
+import { printMirror } from "tacker";
+export async function pathsExist(arrPathsObj) {
+  if (typeof arrPathsObj === undefined)
+    throw new Error("arrPathsObj was undefined");
+  let paths;
+  if (Array.isArray(arrPathsObj)) {
+    paths = arrPathsObj.map(async pathToCheck => {
+      try {
+        let res = await fs.access(pathToCheck);
+        printMirror({ res }, "magenta", "grey");
+        return res;
+      } catch (err) {
+        let errString = `${pathToCheck} in ${JSON.stringify(
+          arrPathsObj,
+          null,
+          2
+        )} was not accessible.\n${err}`;
+        throw new Error(errString);
       }
+    });
+  } else {
+    try {
+      paths = await fs.access(arrPathsObj);
     } catch (err) {
-      reject(`${chalk.red(szPreErrorMessage)}\n${chalk.grey(err)}`);
+      let errString = `${arrPathsObj} was not accessible.\n${err}`;
+      throw new Error(errString);
     }
-  });
+  }
+  printMirror({ paths }, "blue", "grey");
+  resolve(paths);
 }
+
 // export async function pathsExistSync(
 //   arrPathsObj,
 //   szPreErrorMessage = "Path did not exist"
