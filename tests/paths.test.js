@@ -1,6 +1,5 @@
 const log = console.log;
 import test from "ava";
-import chalk from "chalk";
 import { printMirror } from "tacker";
 import { pathsExist } from "../src/index";
 
@@ -23,7 +22,7 @@ test("pathsExist :: Successfully throws because path does not exist", async t =>
     await pathsExist(path);
   });
 });
-test("pathsExist :: Successfully throws because multiple paths do not exist", async t => {
+test.skip("pathsExist :: Successfully throws because multiple paths do not exist", async t => {
   let paths = ["this/path/does/not/exist", "other/path/also/does/not/exist"];
   await t.throwsAsync(async () => {
     await pathsExist(paths);
@@ -33,12 +32,4 @@ test("pathsExist :: Successfully throws because no parameter provided", async t 
   await t.throwsAsync(async () => {
     await pathsExist();
   });
-});
-test.skip("throws", async t => {
-  await t.throwsAsync(
-    async () => {
-      throw new TypeError("🦄");
-    },
-    { instanceOf: TypeError, message: "🦄" }
-  );
 });
