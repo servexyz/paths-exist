@@ -1,25 +1,24 @@
 const log = console.log;
-import fs from "fs";
+import fs from "fs-extra";
 import { printMirror } from "tacker";
 export async function pathsExist(arrPathsObj) {
   if (typeof arrPathsObj === undefined)
     throw new Error("arrPathsObj was undefined");
   if (Array.isArray(arrPathsObj)) {
-    return await arrPathsObj.map(async pathToCheck => {
+    return arrPathsObj.map(async pathToCheck => {
       log(`insideeee`);
       try {
-        let res = await fs.access(pathToCheck);
-
+        let res = await fs.access(pathToCheck, fs.constants.F_OK);
         log(`insideeee 1A`);
         printMirror({ res }, "magenta", "grey");
         return res;
       } catch (err) {
-        // let errString = `${pathToCheck} in ${JSON.stringify(
-        //   arrPathsObj,
-        //   null,
-        //   2
-        // )} was not accessible.\n${err}`;
-        let errString = `${pathToCheck} was not accessible.\n${err}`;
+        let errString = `${pathToCheck} in ${JSON.stringify(
+          arrPathsObj,
+          null,
+          2
+        )} was not accessible.\n${err}`;
+        // let errString = `${pathToCheck} was not accessible.\n${err}`;
         throw new Error(errString);
       }
     });
