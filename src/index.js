@@ -1,5 +1,7 @@
 import fs from "fs-extra";
 //TODO: Create promisified version of fs instead of importing fs-extra
+//TODO: Add overload to allow specifying the file flag; currently using default F_OK. Explicitly stated as reminder to myself to allow overloading
+
 export async function pathsExist(arrPathsObj) {
   if (typeof arrPathsObj === undefined)
     throw new Error("arrPathsObj was undefined");
