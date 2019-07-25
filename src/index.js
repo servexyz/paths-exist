@@ -3,8 +3,8 @@ import fs from "fs-extra";
 export async function pathsExist(arrPathsObj) {
   if (typeof arrPathsObj === undefined)
     throw new Error("arrPathsObj was undefined");
-  let paths;
   if (Array.isArray(arrPathsObj)) {
+    let paths;
     try {
       paths = arrPathsObj.map(async pathToCheck => {
         await fs.access(pathToCheck, fs.constants.F_OK);
