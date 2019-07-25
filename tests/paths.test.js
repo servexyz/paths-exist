@@ -2,15 +2,22 @@ import test from "ava";
 import chalk from "chalk";
 import { pathsExist } from "../src/index";
 
-test("1 path does not exist", async t => {
+test("pathsExist :: Throws because path does not exist", async t => {
   let path = "this/path/does/not/exist";
   await t.throwsAsync(async () => {
     await pathsExist(path);
   });
 });
-test("Multiple paths do not exist", async t => {
+test("pathsExist :: Throws because multiple paths do not exist", async t => {
   let paths = ["this/path/does/not/exist", "this/path/also/does/not/exist"];
-  await t.throwsAsync(pathsExist(paths));
+  await t.throwsAsync(async () => {
+    await pathsExist(paths);
+  });
+});
+test("pathsExist :: Throws because no parameter provided", async t => {
+  await t.throwsAsync(async () => {
+    await pathsExist();
+  });
 });
 test("throws", async t => {
   await t.throwsAsync(

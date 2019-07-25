@@ -1,34 +1,41 @@
+const log = console.log;
 import fs from "fs";
 import { printMirror } from "tacker";
 export async function pathsExist(arrPathsObj) {
   if (typeof arrPathsObj === undefined)
     throw new Error("arrPathsObj was undefined");
-  let paths;
   if (Array.isArray(arrPathsObj)) {
-    paths = arrPathsObj.map(async pathToCheck => {
+    return await arrPathsObj.map(async pathToCheck => {
+      log(`insideeee`);
       try {
         let res = await fs.access(pathToCheck);
+
+        log(`insideeee 1A`);
         printMirror({ res }, "magenta", "grey");
         return res;
       } catch (err) {
-        let errString = `${pathToCheck} in ${JSON.stringify(
-          arrPathsObj,
-          null,
-          2
-        )} was not accessible.\n${err}`;
+        // let errString = `${pathToCheck} in ${JSON.stringify(
+        //   arrPathsObj,
+        //   null,
+        //   2
+        // )} was not accessible.\n${err}`;
+        let errString = `${pathToCheck} was not accessible.\n${err}`;
         throw new Error(errString);
       }
     });
   } else {
     try {
-      paths = await fs.access(arrPathsObj);
+      log(`insideeee2`);
+      let res = await fs.access(arrPathsObj);
+
+      log(`insideeee2 2A`);
+      printMirror({ res }, "yellow", "grey");
+      return res;
     } catch (err) {
       let errString = `${arrPathsObj} was not accessible.\n${err}`;
       throw new Error(errString);
     }
   }
-  printMirror({ paths }, "blue", "grey");
-  resolve(paths);
 }
 
 // export async function pathsExistSync(
