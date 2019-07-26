@@ -33,27 +33,36 @@ import { pathsExist } from 'paths-exist'
 
 ## API
 
-<details><summary><code>pathsExist(szPathToCheck)</code> - <b>Async</b></summary>
----
+<details><summary><code>pathsExist(&lt;String&gt;pathToCheck)</code> - <b>Async</b></summary>
+
+<hr />
 <b>Where</b>
 
-<ul>
-<li><em>szPathToCheck</em> is a string. </li>
-</ul>
+<code>pathToCheck</code> is a single path string you want to check.
 
-<b>Examples</b>
+
+<b>Example</b>
+
 <code style="block">
-
-
+  await pathsExist("/path/to/check")
 </code>
 
-
----
+<hr />
 </details>
 
-<details><summary><code>pathsExist(arrPathToCheck) - <b>Async</b></summary>
----
+<details><summary><code>pathsExist(&lt;Array&gt;pathToCheck)</code> - <b>Async</b></summary>
 
----
+<hr />
+<b>Where</b>
+
+<code>pathToCheck</code> is an array of path strings you want to check.
+
+<b>Example</b>
+
+<code style="block">
+  await pathsExist(["/path/to/check", "other/path/to/check"])
+</code>
+
+<hr />
 </details>
 
