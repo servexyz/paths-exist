@@ -1,48 +1,40 @@
 const log = console.log;
+import path from "path";
 import test from "ava";
 import { printMirror } from "tacker";
 import { pathsExist } from "../src/index";
 
-test("pathsExist :: package.json exists", async t => {
-  let path = "package.json";
-  let pkg = await pathsExist(path);
-  printMirror({ pkg }, "magenta", "grey");
-  t.pass();
+test("pathsExist(undefined) :: returns null", async t => {
+  t.is(await pathsExist(), null);
 });
-test("pathsExist :: package.json and readme.md both exist", async t => {
-  let paths = ["package.json", "readme.md"];
-  let pkgReadme = await pathsExist(paths);
-  printMirror({ pkgReadme }, "magenta", "grey");
-  t.truthy(pkgReadme);
+test("pathsExist(string) :: package.json exists - via relative path", async t => {
+  let realPath = "package.json";
+  t.true(await pathsExist(realPath));
+});
+test("pathsExist(string) :: package.json exists - via absolute path", async t => {
+  let realPath = path.join(process.cwd(), "package.json");
+  t.true(await pathsExist(realPath));
 });
 
-test("pathsExist :: fake path returns false", async t => {
+test("pathsExist(array) :: package.json and readme.md both exist - via relative paths", async t => {
+  let realPaths = ["package.json", "readme.md"];
+  t.true(await pathsExist(realPaths));
+});
+test("pathsExist(array) :: package.json and readme.md both exist - via absolute paths", async t => {
+  let absPathPkg = path.join(process.cwd(), "package.json");
+  let absPathReadme = path.join(process.cwd(), "readme.md");
+  let realPaths = [absPathPkg, absPathReadme];
+  t.true(await pathsExist(realPaths));
+});
+
+test("pathsExist(string) :: fake path returns false", async t => {
   let fakePath = "this/path/does/not/exist";
   t.false(await pathsExist(fakePath));
 });
-test("pathsExist :: fake paths returns false", async t => {
+test("pathsExist(array) :: fake paths returns false", async t => {
   let fakePaths = [
     "this/path/does/not/exist",
     "other/path/also/does/not/exist"
   ];
   t.false(await pathsExist(fakePaths));
-});
-
-// Skipped these since switching from throwing to returning false
-test.skip("pathsExist :: Successfully throws because path does not exist", async t => {
-  let path = "this/path/does/not/exist";
-  await t.throwsAsync(async () => {
-    await pathsExist(path);
-  });
-});
-test.skip("pathsExist :: Successfully throws because multiple paths do not exist", async t => {
-  let paths = ["this/path/does/not/exist", "other/path/also/does/not/exist"];
-  await t.throwsAsync(async () => {
-    await pathsExist(paths);
-  });
-});
-test.skip("pathsExist :: Successfully throws because no parameter provided", async t => {
-  await t.throwsAsync(async () => {
-    await pathsExist();
-  });
 });
