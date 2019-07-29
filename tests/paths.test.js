@@ -44,7 +44,6 @@ test("pathsExist(array) :: fake paths returns false", async t => {
   t.false(await pathsExist(fakePaths));
 });
 
-////////////////////////
 const samples = path.join(process.cwd(), "samples");
 
 const readYES = path.join(samples, "readYES");
