@@ -47,7 +47,6 @@ test("pathsExist(array) :: fake paths returns false", async t => {
 ////////////////////////
 const samples = path.join(process.cwd(), "samples");
 
-const readNO = path.join(samples, "readNO");
 const readYES = path.join(samples, "readYES");
 const writeNO = path.join(samples, "writeNO");
 const writeYES = path.join(samples, "writeYES");
@@ -56,9 +55,22 @@ test("pathsExist(string, F_OK) :: file is accessible", async t => {
   t.true(await pathsExist(readYES, F_OK));
 });
 
-test("pathsExist(string, R_OK) :: file is not readable", async t => {
-  t.false(await pathsExist(readNO, R_OK));
-});
+/*
+* To enable this test temporarily:
+* 1. create a file named "readNO" in samples directory
+* 2. set chmod to 000 ($ > chmod 000 readNO)
+* 3. uncomment lines below
+
+* To enable this test permanently
+TODO: Add empty readNO file
+TODO: Add test.before & test.after to toggle chmod from 000 to 600
+? This will allow you to interface with git without getting a permissions error
+*/
+
+// const readNO = path.join(samples, "readNO");
+// test("pathsExist(string, R_OK) :: file is not readable", async t => {
+//   t.false(await pathsExist(readNO, R_OK));
+// });
 
 test("pathsExist(string, R_OK) :: file is readable", async t => {
   t.true(await pathsExist(readYES, R_OK));
