@@ -1,38 +1,24 @@
 import fs from "fs-extra";
-//TODO: Create promisified version of fs instead of importing fs-extra
 //TODO: Add overload to allow specifying the file flag; currently using default F_OK. Explicitly stated as reminder to myself to allow overloading
+//TODO: Consider creating variant which returns paths
+//TODO: Consider creating variant which throws instead of returning false
 
-export async function pathsExist(arrPathsObj) {
-  if (typeof arrPathsObj === undefined)
-    throw new Error("arrPathsObj was undefined");
-  if (Array.isArray(arrPathsObj)) {
-    let paths;
+export async function pathsExist(mPaths, eFlag = fs.constants.F_OK) {
+  if (typeof mPaths === undefined) return null;
+  if (Array.isArray(mPaths)) {
     try {
-      paths = arrPathsObj.map(async pathToCheck => {
-        await fs.access(pathToCheck, fs.constants.F_OK);
-        return pathToCheck;
+      mPaths.map(async pathToCheck => {
+        await fs.access(pathToCheck, eFlag);
+        return true;
       });
     } catch (err) {
-      let errString = `${pathToCheck} was not accessible.\n${err}`;
-      throw new Error(errString);
-    }
-    if (typeof paths !== undefined) {
-      let awaitedPaths = [];
-      for await (let p of paths) {
-        awaitedPaths.push(p);
-      }
-      return awaitedPaths;
-    } else {
-      console.warn("Paths were undefined. Returning un-awaited paths");
-      return paths;
+      return false;
     }
   } else {
     try {
-      await fs.access(arrPathsObj);
-      return arrPathsObj;
+      await fs.access(mPaths, eFlag);
     } catch (err) {
-      let errString = `${arrPathsObj} was not accessible.\n${err}`;
-      throw new Error(errString);
+      return false;
     }
   }
 }

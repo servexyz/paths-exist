@@ -16,7 +16,20 @@ test("pathsExist :: package.json and readme.md both exist", async t => {
   t.truthy(pkgReadme);
 });
 
-test("pathsExist :: Successfully throws because path does not exist", async t => {
+test("pathsExist :: fake path returns false", async t => {
+  let fakePath = "this/path/does/not/exist";
+  t.false(await pathsExist(fakePath));
+});
+test("pathsExist :: fake paths returns false", async t => {
+  let fakePaths = [
+    "this/path/does/not/exist",
+    "other/path/also/does/not/exist"
+  ];
+  t.false(await pathsExist(fakePaths));
+});
+
+// Skipped these since switching from throwing to returning false
+test.skip("pathsExist :: Successfully throws because path does not exist", async t => {
   let path = "this/path/does/not/exist";
   await t.throwsAsync(async () => {
     await pathsExist(path);
@@ -28,7 +41,7 @@ test.skip("pathsExist :: Successfully throws because multiple paths do not exist
     await pathsExist(paths);
   });
 });
-test("pathsExist :: Successfully throws because no parameter provided", async t => {
+test.skip("pathsExist :: Successfully throws because no parameter provided", async t => {
   await t.throwsAsync(async () => {
     await pathsExist();
   });
