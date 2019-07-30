@@ -33,14 +33,14 @@ import { pathsExist } from 'paths-exist'
 
 ## API
 
-<details><summary><code>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; eFlag)</code> - <b>Async</b></summary>
+<details><summary><code>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
 
 <hr />
 <b>Where</b>
 
 <ul>
 <li><code>pathToCheck</code> is a single path string you want to check.</li>
-<li><code>eFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
+<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
 </ul>
 
 <b>Example</b>
@@ -63,14 +63,14 @@ import { pathsExist } from 'paths-exist'
 <hr />
 </details>
 
-<details><summary><code>pathsExist(&lt;Array&gt; pathToCheck, &lt;fs.constants&gt; eFlag)</code> - <b>Async</b></summary>
+<details><summary><code>pathsExist(&lt;Array&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
 
 <hr />
 <b>Where</b>
 
 <ul>
 <li><code>pathToCheck</code> is an array of path strings you want to check.</li>
-<li><code>eFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
+<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
 </ul>
 
 <b>Example</b>
@@ -98,8 +98,8 @@ import { pathsExist } from 'paths-exist'
 
 
 #### fs.constants
-| Name | Description | 
-|:-----|:------------|
-| `F_OK` | file is accessible | 
-| `R_OK` | file is readable | 
-| `W_OK` | file is writable | 
+| Name   | Description        |
+|:-------|:-------------------|
+| `F_OK` | file is accessible |
+| `R_OK` | file is readable   |
+| `W_OK` | file is writable   |
