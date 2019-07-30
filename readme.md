@@ -75,22 +75,19 @@ import { pathsExist } from 'paths-exist'
 
 <b>Example</b>
 
-<code style="display:block"> import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
-
-  let realPaths = ["real/path", "other/real/path"];
-
-  let fakePaths = ["fake/path", "other/fake/path"];
-
-  let mixedPaths = ["real/path", "fake/path"];
-
+<code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
 
   await pathsExist() // --> null (because path param is empty)
 
-  await pathsExist(realPaths)  // --> true
+  await pathsExist(["readable/path", "second/readable/path"])  // --> true
 
-  await pathsExist(fakePaths) // --> false
+  await pathsExist(["readable/path", "second/readable/path"], F_OK)  // --> true
 
-  await pathsExist(mixedPaths) // --> false
+  await pathsExist(["readable/path", "second/readable/path"], R_OK)  // --> true
+
+  await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK) // --> false
+
+  await pathsExist(["real/path", "fake/path"]) // --> false
 </code>
 
 <hr />
