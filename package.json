@@ -48,7 +48,7 @@
     "production": "npm run build && node build/main.js",
     "ci": "npm-run-all -s build ci:local:timed:vuln",
     "ci:snyk": "snyk test",
-    "ci:remote": "npm-run-all -s clean:build build test:ava",
+    "ci:remote": "npm run build && npm run test:ava",
     "ci:local": "trevor",
     "ci:local:timed": "npm run ci:local | gnomon --type=elapsed-total",
     "ci:local:timed:vuln": "npm-run-all -p ci:snyk ci:local | gnomon --type=elapsed-total",
