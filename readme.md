@@ -22,7 +22,7 @@ File checks are done using <code>fs.access</code> with the default constant <cod
 #### Install
 
 ```sh
-npm install paths-exist
+npm install paths-exist -S
 ```
 
 #### Add to source
