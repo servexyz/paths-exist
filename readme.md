@@ -45,7 +45,7 @@ import { pathsExist } from 'paths-exist'
 
 <b>Example</b>
 
-<code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+<pre><code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
 
   await pathsExist() // --> null (because path param is empty)
 
@@ -58,7 +58,7 @@ import { pathsExist } from 'paths-exist'
   await pathsExist("/readable/path", R_OK) // --> true
 
   await pathsExist("/writeable/path", W_OK) // --> true
-</code>
+</code></pre>
 
 <hr />
 </details>
@@ -75,7 +75,7 @@ import { pathsExist } from 'paths-exist'
 
 <b>Example</b>
 
-<code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+<pre><code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
 
   await pathsExist() // --> null (because path param is empty)
 
@@ -88,7 +88,7 @@ import { pathsExist } from 'paths-exist'
   await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK) // --> false
 
   await pathsExist(["real/path", "fake/path"]) // --> false
-</code>
+</code></pre>
 
 <hr />
 </details>
