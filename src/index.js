@@ -1,11 +1,11 @@
 import fs from "fs-extra";
 
-export async function pathsExist(mPaths, eFlag = fs.F_OK) {
+export async function pathsExist(mPaths, fsFlag = fs.F_OK) {
   if (typeof mPaths === "undefined") return null;
   if (Array.isArray(mPaths)) {
     try {
       for await (let pathToCheck of mPaths) {
-        await fs.access(pathToCheck, eFlag);
+        await fs.access(pathToCheck, fsFlag);
         return true;
       }
     } catch (err) {
@@ -13,7 +13,7 @@ export async function pathsExist(mPaths, eFlag = fs.F_OK) {
     }
   } else {
     try {
-      await fs.access(mPaths, eFlag);
+      await fs.access(mPaths, fsFlag);
       return true;
     } catch (err) {
       return false;

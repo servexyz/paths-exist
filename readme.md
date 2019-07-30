@@ -22,7 +22,7 @@ File checks are done using <code>fs.access</code> with the default constant <cod
 #### Install
 
 ```sh
-npm install paths-exist
+npm install paths-exist -S
 ```
 
 #### Add to source
@@ -33,36 +33,70 @@ import { pathsExist } from 'paths-exist'
 
 ## API
 
-<details><summary><code>pathsExist(&lt;String&gt;pathToCheck)</code> - <b>Async</b></summary>
+<details><summary><code>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
 
 <hr />
 <b>Where</b>
 
-<code>pathToCheck</code> is a single path string you want to check.
-
+<ul>
+<li><code>pathToCheck</code> is a single path string you want to check.</li>
+<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
+</ul>
 
 <b>Example</b>
 
-<code style="block">
-  await pathsExist("/path/to/check")
+<code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+
+  await pathsExist() // --> null (because path param is empty)
+
+  await pathsExist("/real/file/path") // --> true
+
+  await pathsExist("/real/file/path", F_OK) // --> true
+
+  await pathsExist("/fake/file/path", F_OK) // --> false
+
+  await pathsExist("/readable/path", R_OK) // --> true
+
+  await pathsExist("/writeable/path", W_OK) // --> true
 </code>
 
 <hr />
 </details>
 
-<details><summary><code>pathsExist(&lt;Array&gt;pathToCheck)</code> - <b>Async</b></summary>
+<details><summary><code>pathsExist(&lt;Array&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
 
 <hr />
 <b>Where</b>
 
-<code>pathToCheck</code> is an array of path strings you want to check.
+<ul>
+<li><code>pathToCheck</code> is an array of path strings you want to check.</li>
+<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
+</ul>
 
 <b>Example</b>
 
-<code style="block">
-  await pathsExist(["/path/to/check", "other/path/to/check"])
+<code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+
+  await pathsExist() // --> null (because path param is empty)
+
+  await pathsExist(["readable/path", "second/readable/path"])  // --> true
+
+  await pathsExist(["readable/path", "second/readable/path"], F_OK)  // --> true
+
+  await pathsExist(["readable/path", "second/readable/path"], R_OK)  // --> true
+
+  await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK) // --> false
+
+  await pathsExist(["real/path", "fake/path"]) // --> false
 </code>
 
 <hr />
 </details>
 
+
+#### fs.constants
+| Name   | Description        |
+|:-------|:-------------------|
+| `F_OK` | file is accessible |
+| `R_OK` | file is readable   |
+| `W_OK` | file is writable   |
