@@ -1,5 +1,13 @@
 {
   "name": "paths-exist",
+  "description": "check whether single path exists; check whether array of paths exist",
+  "keywords": [
+    "path exists",
+    "check path",
+    "fs.access",
+    "paths exist",
+    "path checker"
+  ],
   "version": "0.2.1",
   "main": "build/main.js",
   "license": "MIT",
