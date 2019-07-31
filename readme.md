@@ -5,16 +5,13 @@
 ## FAQ
 
 <details><summary>Why</summary>
-Sindre already has a small-bundled version for path-checking <a href="https://www.npmjs.com/package/path-exists">path-exists</a>. I wanted an API that was overloaded with the ability to check for an array of paths. While it would be quite simple to implement a factory, I ended up needing this functionality across a few different projects in a week and decided to abstract it.
+Sindre already has a small-bundled version for path-checking: <a href="https://www.npmjs.com/package/path-exists">path-exists</a>. I wanted an API that was overloaded with the ability to check for an array of paths. While it would be quite simple to implement a factory, I ended up needing this functionality across a few different projects in a week and decided to abstract it.
 </details>
 
 <details><summary>How</summary>
-File checks are done using <code>fs.access</code> with the default constant <code>fs.constants.F_OK</code>. In the future, will allow overloading of this constant.
+File checks are done using <code>fs.access</code> with the default constant <code>fs.constants.F_OK</code>. You can overload this file constant with <code>F_OK</code>, <code>W_OK</code> or <code>R_OK</code> (as well as pairings eg. <code>W_OK | R_OK</code>).
 
-<h3><a href="https://nodejs.org/api/fs.html#fs_file_access_constants">File Access Constant</a>: fs.constants.F_OK</h3>
-<p>
-"Flag indicating that the file is visible to the calling process. This is useful for determining if a file exists, but says nothing about rwx permissions. Default if no mode is specified."
-</p>
+You can read more about the file constants here: <a href="https://nodejs.org/api/fs.html#fs_file_access_constants">File Access Constant</a>: fs.constants (F_OK, W_OK, R_OK)
 </details>
 
 ## Getting Started
@@ -33,7 +30,8 @@ import { pathsExist } from 'paths-exist'
 
 ## API
 
-<details><summary><code>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
+<details>
+<summary><b>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</b></summary>
 
 <hr />
 <b>Where</b>
@@ -43,27 +41,28 @@ import { pathsExist } from 'paths-exist'
 <li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
 </ul>
 
-<b>Example</b>
-
-<pre><code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
-
-  await pathsExist() // --> null (because path param is empty)
-
-  await pathsExist("/real/file/path") // --> true
-
-  await pathsExist("/real/file/path", F_OK) // --> true
-
-  await pathsExist("/fake/file/path", F_OK) // --> false
-
-  await pathsExist("/readable/path", R_OK) // --> true
-
-  await pathsExist("/writeable/path", W_OK) // --> true
-</code></pre>
-
-<hr />
 </details>
 
-<details><summary><code>pathsExist(&lt;Array&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</code> - <b>Async</b></summary>
+```js
+import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+
+await pathsExist();
+// --> return null (because path param is empty)
+await pathsExist("/real/file/path");
+// --> return true
+await pathsExist("/real/file/path", F_OK);
+// --> return true
+await pathsExist("/fake/file/path", F_OK);
+// --> return false
+await pathsExist("/readable/path", R_OK);
+// --> return true
+await pathsExist("/writeable/path", W_OK);
+// --> return true
+```
+
+---
+
+<details><summary><b>pathsExist(&lt;Array&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</b></summary>
 
 <hr />
 <b>Where</b>
@@ -72,29 +71,29 @@ import { pathsExist } from 'paths-exist'
 <li><code>pathToCheck</code> is an array of path strings you want to check.</li>
 <li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
 </ul>
-
-<b>Example</b>
-
-<pre><code style="display:block">import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
-
-  await pathsExist() // --> null (because path param is empty)
-
-  await pathsExist(["readable/path", "second/readable/path"])  // --> true
-
-  await pathsExist(["readable/path", "second/readable/path"], F_OK)  // --> true
-
-  await pathsExist(["readable/path", "second/readable/path"], R_OK)  // --> true
-
-  await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK) // --> false
-
-  await pathsExist(["real/path", "fake/path"]) // --> false
-</code></pre>
-
-<hr />
 </details>
 
+```js
+import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+
+await pathsExist();
+// --> return null (because path param is empty)
+await pathsExist(["readable/path", "second/readable/path"]);
+// --> return true
+await pathsExist(["readable/path", "second/readable/path"], F_OK);
+// --> return true
+await pathsExist(["readable/path", "second/readable/path"], R_OK);
+// --> return true
+await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK);
+// --> return false
+await pathsExist(["real/path", "fake/path"]);
+// --> return false
+```
+
+---
 
 #### fs.constants
+
 | Name   | Description        |
 |:-------|:-------------------|
 | `F_OK` | file is accessible |
