@@ -2,7 +2,6 @@
 
 ![CI status](https://travis-ci.org/servexyz/paths-exist.svg?branch=master)
 
-
 ## Getting Started
 
 #### Install
@@ -14,7 +13,7 @@ npm install paths-exist -S
 #### Add to source
 
 ```js
-import { pathsExist } from 'paths-exist'
+import { pathsExist } from "paths-exist";
 ```
 
 ## API
@@ -33,9 +32,9 @@ import { pathsExist } from 'paths-exist'
 </details>
 
 ```js
-import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist";
 
-(async () => {
+async () => {
   await pathsExist();
   // --> return null (because path param is empty)
   await pathsExist("/real/file/path");
@@ -48,7 +47,7 @@ import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
   // --> return true
   await pathsExist("/writeable/path", W_OK);
   // --> return true
-});
+};
 ```
 
 ---
@@ -66,9 +65,9 @@ import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
 </details>
 
 ```js
-import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
+import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist";
 
-(async () => {
+async () => {
   await pathsExist();
   // --> return null (because path param is empty)
   await pathsExist(["readable/path", "second/readable/path"]);
@@ -81,8 +80,9 @@ import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist"
   // --> return false
   await pathsExist(["real/path", "fake/path"]);
   // --> return false
-});
+};
 ```
+
 ---
 
 ## FAQ
@@ -92,16 +92,21 @@ Sindre already has a small-bundled version for path-checking: <a href="https://w
 </details>
 
 <details><summary>How</summary>
-File checks are done using <code>fs.access</code> with the default constant <code>fs.constants.F_OK</code>. You can overload this file constant with <code>F_OK</code>, <code>W_OK</code> or <code>R_OK</code> (as well as pairings eg. <code>W_OK | R_OK</code>).
+<ul> 
+<li>File checks are done using <code>fs.access</code> with the default constant <code>fs.constants.F_OK</code>.</li>
 
-You can read more about the file constants here: <a href="https://nodejs.org/api/fs.html#fs_file_access_constants">File Access Constant</a>: fs.constants (F_OK, W_OK, R_OK)
+<li>You can overload this file constant with <code>F_OK</code>, <code>W_OK</code> or <code>R_OK</code> (as well as pairings eg. <code>W_OK | R_OK</code>).</li>
+
+<li>You can read more about the file constants here: <a href="https://nodejs.org/api/fs.html#fs_file_access_constants">File Access Constant</a></li>
+
 </details>
-
 
 #### fs.constants
 
+> [file_access_constants](https://nodejs.org/api/fs.html#fs_file_access_constants)
+
 | Name   | Description        |
-|:-------|:-------------------|
+| :----- | :----------------- |
 | `F_OK` | file is accessible |
 | `R_OK` | file is readable   |
 | `W_OK` | file is writable   |
