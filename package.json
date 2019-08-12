@@ -2,6 +2,8 @@
   "name": "paths-exist",
   "description": "check whether single path exists; check whether array of paths exist",
   "keywords": [
+    "file exists",
+    "files exist",
     "path exists",
     "check path",
     "fs.access",
