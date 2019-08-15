@@ -1,4 +1,5 @@
 # paths-exist
+> Check whether a path - or an array of paths - exists
 
 ![CI status](https://travis-ci.org/servexyz/paths-exist.svg?branch=master)
 
@@ -17,6 +18,39 @@ import { pathsExist } from "paths-exist";
 ```
 
 ## API
+
+<details>
+<summary><b>pathsExist(&lt;Array&gt; pathsToCheck, &lt;fs.constants&gt; fsFlag)</b></summary>
+
+<hr />
+<b>Where</b>
+
+<ul>
+<li><code>pathsToCheck</code> is an array of path strings you want to check.</li>
+<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
+</ul>
+</details>
+
+```js
+import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist";
+
+async () => {
+  await pathsExist();
+  // --> return null (because path param is empty)
+  await pathsExist(["readable/path", "second/readable/path"]);
+  // --> return true
+  await pathsExist(["readable/path", "second/readable/path"], F_OK);
+  // --> return true
+  await pathsExist(["readable/path", "second/readable/path"], R_OK);
+  // --> return true
+  await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK);
+  // --> return false
+  await pathsExist(["real/path", "fake/path"]);
+  // --> return false
+};
+```
+
+---
 
 <details>
 <summary><b>pathsExist(&lt;String&gt; pathToCheck, &lt;fs.constants&gt; fsFlag)</b></summary>
@@ -52,39 +86,6 @@ async () => {
 
 ---
 
-<details>
-<summary><b>pathsExist(&lt;Array&gt; pathsToCheck, &lt;fs.constants&gt; fsFlag)</b></summary>
-
-<hr />
-<b>Where</b>
-
-<ul>
-<li><code>pathsToCheck</code> is an array of path strings you want to check.</li>
-<li><code>fsFlag</code> is an optional param where you can specify the expected file mode; F_OK is the default.</li>
-</ul>
-</details>
-
-```js
-import { R_OK, W_OK, F_OK, pathsExist } from "paths-exist";
-
-async () => {
-  await pathsExist();
-  // --> return null (because path param is empty)
-  await pathsExist(["readable/path", "second/readable/path"]);
-  // --> return true
-  await pathsExist(["readable/path", "second/readable/path"], F_OK);
-  // --> return true
-  await pathsExist(["readable/path", "second/readable/path"], R_OK);
-  // --> return true
-  await pathsExist(["unwritable/path", "other/unwritable/path"], W_OK);
-  // --> return false
-  await pathsExist(["real/path", "fake/path"]);
-  // --> return false
-};
-```
-
----
-
 ## FAQ
 
 <details><summary>Why</summary>
@@ -106,7 +107,7 @@ Sindre already has a small-bundled version for path-checking: <a href="https://w
 > [file_access_constants](https://nodejs.org/api/fs.html#fs_file_access_constants)
 
 | Name   | Description        |
-| :----- | :----------------- |
+|--------|--------------------|
 | `F_OK` | file is accessible |
 | `R_OK` | file is readable   |
 | `W_OK` | file is writable   |
